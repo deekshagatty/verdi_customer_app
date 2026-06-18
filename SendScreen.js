@@ -476,8 +476,6 @@ export default function SendScreen({ go, later, language, token }) {
     try {
       const trimmed = query.trim();
 
-      // Manual text search only: show the dropdown list.
-      // PACI number search is handled separately and will auto-select the matched address.
       if (/^\d{6,}$/.test(trimmed)) {
         setDropoffSuggestions([]);
         return;
@@ -498,7 +496,6 @@ export default function SendScreen({ go, later, language, token }) {
     try {
       const trimmed = paciNumber.trim();
 
-      // PACI number flow: do not show suggestion dropdown. Auto-fill first matched result.
       setDropoffSearching(true);
       setDropoffSuggestions([]);
 
@@ -528,7 +525,7 @@ export default function SendScreen({ go, later, language, token }) {
   };
 
   const selectDropoffSuggestion = (item) => {
-    // Manual address result selected from dropdown.
+
     applySelectedDropoffAddress({
       address: item.address,
       lat: item.lat,
@@ -716,8 +713,6 @@ export default function SendScreen({ go, later, language, token }) {
       if (editingId) {
         url = `${BASE_URL}/update_branch`;
 
-        // Backend may validate either id or branch_id.
-        // all_branches returns "id", so send it in both fields.
         fd.append('id', String(editingId));
         fd.append('branch_id', String(editingId));
       }
@@ -773,8 +768,6 @@ export default function SendScreen({ go, later, language, token }) {
     try {
       const fd = new FormData();
 
-      // Backend may validate either id or branch_id.
-      // all_branches returns "id", so send it in both fields.
       fd.append('id', String(branchId));
       fd.append('branch_id', String(branchId));
 
@@ -935,11 +928,8 @@ export default function SendScreen({ go, later, language, token }) {
        order_amount: Number(fareAmount),
        platform: 'customer_app',
 
-       // Send MyFatoorah InvoiceId separately to backend.
        invoice_id: String(invoiceId || paymentId),
 
-       // Keep payment_id also for backend validation.
-       // If SDK does not return PaymentId, invoiceId is used.
        payment_id: String(paymentId),
        payment_transaction_id: String(transactionId || ''),
 
